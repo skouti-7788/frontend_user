@@ -56,35 +56,36 @@ export default function History(){
         fetchAchater()
     },[])
     
-    const [newnhostoy,setNewnhostoy] = useState([...idlireShowBooks])
+    const [newnhostoy,setNewnhostoy] = useState([])
+    const [activeTab,setActiveTab] = useState('lectures')
     const  history = [
-        { label:  'Mes lectures', action: () => {setNewnhostoy([...idlireShowBooks]);setShowAchet(false)} },
-        { label:  'Mes téléchargements', action: () => {setNewnhostoy([...idtelechargements]);setShowAchet(false)}},
-        { label:  'Mes achats', action: () =>{ setNewnhostoy([...newachater]);setShowAchet(true)}},
-        { label:  'Mes emprunts', action: () =>  {setNewnhostoy([...idnewemprunt]);setShowAchet(false)}},
+        { label:  'Mes lectures', key: 'lectures', action: () => {setNewnhostoy([...idlireShowBooks]);setShowAchet(false); setActiveTab('lectures')} },
+        { label:  'Mes téléchargements', key: 'telechargements', action: () => {setNewnhostoy([...idtelechargements]);setShowAchet(false); setActiveTab('telechargements')} },
+        { label:  'Mes achats', key: 'achats', action: () =>{ setNewnhostoy([...newachater]);setShowAchet(true); setActiveTab('achats')} },
+        { label:  'Mes emprunts', key: 'emprunts', action: () =>  {setNewnhostoy([...idnewemprunt]);setShowAchet(false); setActiveTab('emprunts')} },
 
     ]
-    
-
-    // if (status_paye === "paye") {
-    //     message = "📥 Livre acheté";
-    // } else if (status_paye === "en_attente") {
-    //     message = "⏳ Paiement en attente";
-    // } else if (status_paye === "refuse") {
-    //     message = "❌ Paiement refusé";
-    // }
-    return(
+    useEffect(()=>{
+    if (!showAchat && newnhostoy.length === 0) {
+        setNewnhostoy([...idlireShowBooks]);
+    }
+    },[idlireShowBooks])
+     return(
         <div className="cards-f">
             <div style={{marginTop:'50px',marginBottom:'50px'}} className='cards-h'>
                 <h3>Historique</h3>
                 <ul>
-                    {history.map((h)=><li key={h.label} onClick={h.action}>{h.label}</li>)}
+                    {history.map((h)=>
+                    <li  
+                    // className={activeTab === h.key ? 'active-history' : ''}
+                    style={{color: activeTab === h.key ? '#58997b' : ''}}
+                     key={h.label} onClick={()=>{ h.action()}}>{h.label}</li>)}
                 </ul>
 
                 {newnhostoy.length > 0 ?
                 <div className='cards'>
-                    
                     {newnhostoy.map((b)=> {
+
                         return( <div className={showAchat?'cards-achat':''}>
                          <BookCard  key={b.id} book={b.livre || b}/>
                           {showAchat && (

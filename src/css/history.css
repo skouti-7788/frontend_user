@@ -24,4 +24,6 @@
 .cards-h ul li:hover {
     color: #58997b;
 }
-
+.active-history {
+    color: #58997b;
+}

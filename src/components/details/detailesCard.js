@@ -127,8 +127,8 @@ export default function DetailesCard() {
 
     return (
          <>
-        {!showPaye&&<div className="details-wrapper">
-            <div className="detailes">
+        <div className={!showPaye ? "details-wrapper" : ""}>
+            {!showPaye&&<div><div className="detailes">
                 <div className='img-container'>
                     <img src={oneCard.image} alt={oneCard.title} /> 
                 </div>
@@ -169,10 +169,11 @@ export default function DetailesCard() {
             <div className='discrip'>
                 <h4>Description</h4>
                 <p>{descriptions}</p>
-            </div>
+            </div> </div>}
+            <AchCard bookData={oneCard} showPaye={showPaye} setShowPaye={setShowPaye}is_free={oneCard.is_free} bookId={oneCard.id} download_link={oneCard.download_link}  book={oneCard.title} file_url={oneCard.pdf_url} />
 
-            <AchCard setShowPaye={setShowPaye}is_free={oneCard.is_free} bookId={oneCard.id} download_link={oneCard.download_link}  book={oneCard.title} file_url={oneCard.pdf_url} />
-            <CategoryMem  oneCard={oneCard} allLivres={cards.livres}/>
+            {!showPaye&& <CategoryMem  oneCard={oneCard} allLivres={cards.livres}/>}
+            {!showPaye&& <div>
             {opinions?.length > 0&&
              (<div className='opinions'>
                     <h4>Opinions</h4>
@@ -191,9 +192,9 @@ export default function DetailesCard() {
                         ))}
                     </div>
                 </div>
-            )}
-        </div>}
-        {showPaye&&<PaymentPage bookData={oneCard} setShowPaye={setShowPaye}/>} 
+            )}</div>}
+        </div>
+
     </>
     )
 }
