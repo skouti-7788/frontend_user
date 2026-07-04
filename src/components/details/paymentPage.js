@@ -2,31 +2,76 @@ import React, { useState } from 'react';
 import '../../css/paymentpage.css';
 import { useDispatch } from 'react-redux';
 import { setMessagePaye } from '../../app/redux/detailescardSlice';
-export default  function PaymentPage({bookData,setShowPaye}) {
+import useAcheter from '../../app/data/acheterData';
+export default  function PaymentPage({bookData,achatId,handleAcheter,setShowPaye}) {
     const dispatch = useDispatch()
+    const {handlePayment} = useAcheter();
     const [formData, setFormData] = useState({
         cardName: '',
         cardNumber: '',
         expiry: '',
         cvv: ''
     });
+    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+        setErrors((prev) => ({ ...prev, [name]: '' }));
     };
 
-    const handlePay = (e) => {
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!formData.cardName.trim()) {
+            newErrors.cardName = "Le nom sur la carte est requis.";
+        }
+        if (!formData.cardNumber.trim()) {
+            newErrors.cardNumber = "Le numéro de carte est requis.";
+        }
+        if (!formData.expiry.trim()) {
+            newErrors.expiry = "La date d'expiration est requise.";
+        }
+        if (!formData.cvv.trim()) {
+            newErrors.cvv = "Le CVV est requis.";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handlePay = async (e) => {
         e.preventDefault();
-        console.log("Données envoyées à Laravel:", formData);
-        alert("Traitement du paiement sécurisé en cours...");
+
+        if (!validateForm()) {
+            return;
+        }
+
+        try {
+            await handlePayment(achatId, formData);
+            dispatch(setMessagePaye('Paiement accepté'));
+            handleAcheter();
+            setShowPaye(false);
+        } catch (err) {
+            const responseErrors = err.response?.data?.errors;
+            if (responseErrors) {
+                const formattedErrors = Object.fromEntries(
+                    Object.entries(responseErrors).map(([key, value]) => [key, value?.[0] || 'Erreur inconnue'])
+                );
+                setErrors(formattedErrors);
+            } else {
+                setErrors({ form: 'Le paiement a échoué. Veuillez réessayer.' });
+            }
+            dispatch(setMessagePaye('Le paiement a échoué'));
+            console.error('Payment failed:', err);
+        }
     };
     const book = bookData || {
-        title: "Livre PDF (Library Manager)",
+        title: "Livre PDF ",
         price: 49.00,
         currency: "DH"
     };
-    console.log(book)
+    // console.log(book)
     return (
         <div className="checkout-container">
             <span  className='back-button'
@@ -48,9 +93,10 @@ export default  function PaymentPage({bookData,setShowPaye}) {
                             type="text" 
                             name="cardName" 
                             placeholder="M. REDWAN XXXX" 
+                            value={formData.cardName}
                             onChange={handleChange}
-                            required 
                         />
+                        {errors.cardName && <span className="error-message">{errors.cardName}</span>}
                     </div>
 
                     <div className="form-group">
@@ -60,9 +106,10 @@ export default  function PaymentPage({bookData,setShowPaye}) {
                             name="cardNumber" 
                             placeholder="0000 0000 0000 0000" 
                             maxLength="16"
+                            value={formData.cardNumber}
                             onChange={handleChange}
-                            required 
                         />
+                        {errors.cardNumber && <span className="error-message">{errors.cardNumber}</span>}
                     </div>
 
                     <div className="card-details-grid">
@@ -73,9 +120,10 @@ export default  function PaymentPage({bookData,setShowPaye}) {
                                 name="expiry" 
                                 placeholder="MM/YY" 
                                 maxLength="5"
+                                value={formData.expiry}
                                 onChange={handleChange}
-                                required 
                             />
+                            {errors.expiry && <span className="error-message">{errors.expiry}</span>}
                         </div>
                         <div className="form-group">
                             <label>CVV</label>
@@ -84,14 +132,14 @@ export default  function PaymentPage({bookData,setShowPaye}) {
                                 name="cvv" 
                                 placeholder="123" 
                                 maxLength="3"
+                                value={formData.cvv}
                                 onChange={handleChange}
-                                required 
                             />
+                            {errors.cvv && <span className="error-message">{errors.cvv}</span>}
                         </div>
                     </div>
 
-                    <button type="submit" onClick={()=>dispatch(setMessagePaye('La demande est incomplète'))}
-                    className="pay-button">
+                    <button type="submit" className="pay-button">
                         Confirmer
                     </button>
                 </form>
@@ -127,12 +175,12 @@ export default  function PaymentPage({bookData,setShowPaye}) {
                 <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                     {/* Hna t-beddel smiya */}
                     <span>{book.title}</span>
-                    <strong>{book.prix } {'DH'||book.currency}</strong>
+                    <strong>{book.prix}  DH</strong>
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                     <span>Frais de service</span>
-                    <strong>0.00 {book.currency}</strong>
+                    <strong>0.00  DH</strong>
                 </div>
 
                 <hr style={{margin: '15px 0', border: '0', borderTop: '1px solid #e5e7eb'}} />
@@ -141,7 +189,7 @@ export default  function PaymentPage({bookData,setShowPaye}) {
                     <span>Total</span>
                     {/* Hna l-x-am3 l-total */}
                     <span style={{color: '#2563eb'}}>
-                        {book.prix} {book.currency}
+                        {book.prix}  DH
                     </span>
                 </div>
             </div>

@@ -99,7 +99,7 @@ export default function DetailesCard() {
     },[oneCard])
     const opinions = detailescard.opinions.filter((o)=> o.livre_id === oneCard.id)
 
-     console.log(oneCard.id,detailescard.isOpinion)
+    //  console.log(oneCard.id,detailescard.isOpinion)
     const detailsData = [
         { label: 'Catégorie', value: oneCard.category },
         { label: 'Consultations', value: oneCard.showLiver },
