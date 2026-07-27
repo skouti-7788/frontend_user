@@ -10,6 +10,7 @@ export default function useAcheter() {
     const user = JSON.parse(localStorage.getItem("user")) || {};
     // const status_paye = useSelector((state) => state.detailescard.status_paye);
     const [success, setSuccess] = useState(false);
+    const [message, setMessage] = useState('');
     const fetchAchater = async () => {
         try{
             const res = await axios.get('/acheter')
@@ -43,6 +44,7 @@ export default function useAcheter() {
         try {
             const res = await axios.post(`/acheter/${achatId}/payment`, cardData);
             setSuccess(res.data.success)
+            setMessage(res.data.message)
             return res.data;
         } catch (err) {
             console.log("PAYMENT ERROR:", err.response?.data);
@@ -100,5 +102,5 @@ export default function useAcheter() {
     };
     // Add logic to trigger acheterBook when needed
 
-    return {achater,success,fetchAchater, acheterBook,updateAcheter, handlePayment, acceptOrder, rejectOrder, cancelPayment };
+    return {achater,success,message,fetchAchater, acheterBook,updateAcheter, handlePayment, acceptOrder, rejectOrder, cancelPayment };
 }

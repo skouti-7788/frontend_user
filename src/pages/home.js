@@ -22,7 +22,7 @@ export default function Home(){
             </div> */}
             <AuteursPopulaires/>
             <Temoignages/>      
-            <Newsletter/>
+            {/* <Newsletter/> */}
            
         </div>
     )

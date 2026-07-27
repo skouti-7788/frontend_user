@@ -27,7 +27,7 @@ export default function ImageBox() {
             <div className="image-bg" id="Recherche">
                 <div className="image-box">
                     <div className="cont-searsh">
-                        <h3>Bibliothèque Ketab</h3>
+                        <h3>Bibliothèque Kitab</h3>
                         <h4 className="h4">Trouvez votre prochain livre en un instant</h4>
                         <input
                             type="text"
