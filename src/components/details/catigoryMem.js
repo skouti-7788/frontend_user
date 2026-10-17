@@ -1,7 +1,5 @@
-import { useSelector } from 'react-redux'
 import '../../css/catigorymem.css'
-import { useEffect, useState } from 'react';
-import api from '../../api/axios';
+ 
 export default function CategoryMem({ oneCard,allLivres }) {
     const similar = allLivres.filter(
         (livre) =>

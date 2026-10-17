@@ -1,20 +1,17 @@
 import { useEffect,useState } from "react";
 import { useShowlivres } from "../app/data/showlivresData";
-import { setAcheter } from '../app/redux/detailescardSlice';
 import useLivres from "../app/data/database";
 import BookCard from "../components/home/bookcard";
 import '../css/history.css'
 import axios from "../api/axios";
 import useTelecharger from "../app/data/telechargerData";
 import useAcheter from "../app/data/acheterData";
-import { useDispatch } from 'react-redux'
 export default function History(){
-    const dispatch = useDispatch() 
     const [userEmprunts,setUserEmprunts] = useState([])
     const [showAchat,setShowAchet] = useState(false)
     const { lireShow ,fetchShowlivres } = useShowlivres();
     const { telechar,fetchTelecharger } = useTelecharger()
-    const { achater,fetchAchater,updateAcheter } = useAcheter()
+    const { achater,fetchAchater} = useAcheter()
     const {livres} = useLivres() 
     const ok = JSON.parse(localStorage.getItem('ok')) || null
     const iduser =  ok?JSON.parse(localStorage.getItem('user')).id:null

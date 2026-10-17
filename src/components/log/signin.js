@@ -4,8 +4,7 @@ import { setShowFavorite } from '../../app/redux/detailescardSlice'
 import { useState, useEffect } from "react"
 import { useLog } from "../../app/data/logData"
 import '../../css/signIn.css'
-import api from "../../api/axios"
-
+ 
 export default function SignIn() {
     const { addUsers, verUser } = useLog()
     const [user, setUser] = useState({

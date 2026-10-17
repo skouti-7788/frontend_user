@@ -1,7 +1,7 @@
 import axios from "../../api/axios";
 import { useDispatch } from "react-redux";
 import { setIsShowLivre} from "../redux/detailescardSlice";
-import { useCallback, useEffect,useState } from "react";
+import { useState } from "react";
 export  function useShowlivres(){
     const [lireShow,setLireShow]  = useState([])
     // const [isShowLivre, setIsShowLivre] = useState(null);

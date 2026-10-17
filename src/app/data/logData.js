@@ -1,6 +1,6 @@
 import { useEffect} from "react";
 import { useDispatch} from "react-redux";
-import { setUsers ,addUser,setVerUser,setNotification,setMessage} from "../redux/logSlice";
+import { setNotification,setMessage} from "../redux/logSlice";
 import api from '../../api/axios';
 // import {jwtDecode} from "jwt-decode";
 export  function useLog(){

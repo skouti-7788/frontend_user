@@ -1,11 +1,9 @@
 import { useState } from "react";
 import axios from "../../api/axios";
-import { useDispatch, useSelector } from "react-redux";
-// Add relevant imports for slices if needed
+ // Add relevant imports for slices if needed
 
 export default function useTelecharger() {
-    const dispatch = useDispatch();
-    // Add selectors as needed
+     // Add selectors as needed
     const [telechar,setTelchar] = useState([])
     const user = JSON.parse(localStorage.getItem("user")) || {};
     const fetchTelecharger = async () => {

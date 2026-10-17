@@ -3,7 +3,6 @@ import { useFavorite } from "../app/data/favoriteData";
 import useLivres from "../app/data/database";
 import { useEffect } from "react";
 import  BookCard from '../components/home/bookcard';
-// import Next from "../components/home/next";
 export default function Favorites(){
     const { fetchFavorite } = useFavorite();
     const { livres,fetchLivres } = useLivres();

@@ -1,15 +1,15 @@
 import axios from "../../api/axios";
-import { setIsRate,setRate,setFavorite,setShowrate,clearRate} from "../redux/detailescardSlice";
+import { setIsRate ,setShowrate,clearRate} from "../redux/detailescardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setClose } from "../redux/logSlice";
-import { useEffect,useState } from "react";
-import useLivres from "./database";
+import { useState } from "react";
+// import useLivres from "./database";
 export  function useHistory(){
   //  const [isRate, setIsRate] = useState(0.0);
-    const { fetchLivres } = useLivres();
+    // const { fetchLivres } = useLivres();
     const dispatch = useDispatch();
     const detailescard = useSelector((state)=> state.detailescard)
-    const show = useSelector((state)=> state.loguser)
+    // const show = useSelector((state)=> state.loguser)
     // console.log(detailescard.rate)
     // console.log(detailescard)
     const [history, setHistory] = useState([]);

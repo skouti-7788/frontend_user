@@ -1,6 +1,5 @@
 import axios from "../../api/axios";
-import { useEffect, useState } from "react";
-import { useDispatch ,useSelector} from "react-redux";
+import { useDispatch } from "react-redux";
 import { setOpinion } from "../redux/detailescardSlice";
 export default function useOpinion() {
 //   const livres = useSelector((state) => state.cards.livres);

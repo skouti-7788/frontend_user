@@ -1,6 +1,4 @@
 import '../../css/panier.css'
-import k from '../../images/k.png'
-import title from '../../images/titlebooks.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { Filter, sethidCard } from '../../app/redux/cardsSlice'
 import { Show,setMessage, setOk, setClose } from '../../app/redux/logSlice'

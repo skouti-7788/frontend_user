@@ -1,14 +1,11 @@
 import axios from "../../api/axios";
-// import { setRate,setFavorite,setShowrate,clearRate} from "../redux/detailescardSlice";
-// import { useDispatch, useSelector } from "react-redux";
-// import { setClose } from "../redux/logSlice";
-import { setFavorites,setLireFavorite } from "../redux/profileSlice";
+import { setFavorites } from "../redux/profileSlice";
 import { useDispatch } from "react-redux";
-import { useCallback, useEffect,useState } from "react";
+import { useCallback,useState } from "react";
 export  function useFavorite(){
     const dispatch = useDispatch();
     const [isFavorite,setIsFavorite] = useState(false);
-    const [loadingFavorite, setLoadingFavorite] = useState(true);
+    // const [loadingFavorite, setLoadingFavorite] = useState(true);
     const fetchFavorite = async () => {
                 const res = await axios.get("/favorite")
                 dispatch(setFavorites(res.data.favorites));
@@ -45,5 +42,7 @@ export  function useFavorite(){
              
         }
     };
-    return { fetchFavorite,checkFavorite, toggleFavorite, isFavorite, loadingFavorite };
+    return { fetchFavorite,checkFavorite, toggleFavorite, isFavorite,
+        //  loadingFavorite 
+        };
 }

@@ -1,6 +1,4 @@
-import { useFavorite } from '../../app/data/favoriteData';
-import { useShowlivres } from '../../app/data/showlivresData';
-import { useEffect } from "react";
+ 
 import { useNavigate } from "react-router";
 export default function BookCard({book}) {
     // const { fetchFavorite  } = useFavorite();

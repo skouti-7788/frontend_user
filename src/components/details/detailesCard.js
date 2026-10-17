@@ -1,7 +1,7 @@
 import '../../css/detailescard.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
-import { setShowrate, clearIsShowLivre, clearIsRate,setEmprunter, setShowOpinion,
+import { setShowrate, clearIsShowLivre, clearIsRate, setShowOpinion,
        clearIsOpinion, setShowShare } from '../../app/redux/detailescardSlice'
 import opinion from '../../images/opinion.png'
 import favorite1 from '../../images/favorite1.png'
@@ -13,14 +13,12 @@ import CategoryMem from './catigoryMem'
 import { Show } from '../../app/redux/logSlice'
 import AchCard from './achCard'
 import useLivres from '../../app/data/database'
-import { useCallback, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import { useFavorite } from '../../app/data/favoriteData'
-import { useShowlivres } from '../../app/data/showlivresData'
-import { setLire } from '../../app/redux/profileSlice'
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import { useShowlivres } from '../../app/data/showlivresData' 
 import api from '../../api/axios'
 import useOpinion from '../../app/data/opinionDada'
-import PaymentPage from './paymentPage';
+ 
 
 export default function DetailesCard() {
     const [star, setStar] = useState(false)
@@ -33,7 +31,6 @@ export default function DetailesCard() {
     const profile = useSelector((state) => state.profile)
     const user = JSON.parse(localStorage.getItem('user')) || {}
     const { id } = useParams()
-    const [userOpinion,setUserOpinon] = useState();
     const oneCard = cards.livres.find((c) => c.id === Number(id)) || {}
     const { checkFavorite, toggleFavorite, isFavorite } = useFavorite()
     const { addShowlivres } = useShowlivres()

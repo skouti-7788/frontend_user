@@ -1,4 +1,3 @@
-import React from 'react';
 import '../../css/auteurspopulaires.css'
 import Victor_Hugo from '../../images/Victor-Hugo.webp'
 import Emile_Zola from '../../images/émile-zola.webp'

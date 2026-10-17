@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setMessagePaye } from '../../app/redux/detailescardSlice';
 import useAcheter from '../../app/data/acheterData';
 import MessagePaye from '../details/MessagePaye';
-export default  function PaymentPage({bookData,achatId,handleAcheter,bookId,setShowPaye}) {
+export default  function PaymentPage({bookData,achatId,bookId,setShowPaye}) {
     const dispatch = useDispatch()
     const {success,message,handlePayment} = useAcheter();
     const [formData, setFormData] = useState({

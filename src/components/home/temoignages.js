@@ -1,4 +1,3 @@
-import React from 'react';
 import '../../css/temoignages.css'
 
 export default function Temoignages() {
