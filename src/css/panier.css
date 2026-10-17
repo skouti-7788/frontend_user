@@ -20,15 +20,7 @@
     background: rgba(255, 255, 255, 0.8);
     box-shadow: 0 4px 30px rgba(157, 228, 157, 0.06);
 }
-
-/* --- Logo --- */
-/* .nav-logo {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    gap: 0;
-    user-select: none;
-} */
+ 
 .nav-logo {
     display: flex;
     align-items: center;
@@ -246,14 +238,4 @@
         font-size: 0.8rem;
     }
 }
-/*--- profile ---*/
-/* .profile-info ul,.profile-settings {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-} */
+ 
