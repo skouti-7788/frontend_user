@@ -382,8 +382,8 @@
 .po-title em {
     font-style: italic;
     background: linear-gradient(90deg, #3aab6d, #1a6b3c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    --webkit-background-clip: text;
+    --webkit-text-fill-color: transparent;
 }
  
 /* ── Grid ── */

@@ -1,14 +1,12 @@
 import axios from "../../api/axios";
-import { useEffect, useState } from "react";
+import { useEffect,useCallback} from "react";
 import { useDispatch ,useSelector} from "react-redux";
 import { setLivres } from "../redux/cardsSlice";
 export default function useLivres() {
   const livres = useSelector((state) => state.cards.livres);
   const dispatch = useDispatch();
-  // const [livres, setLivres] = useState([]);
-  // console.log("useLivres hook called", livres);
-  
-    const fetchLivres = async () => {
+   
+    const fetchLivres = useCallback( async () => {
       try {
         const res = await axios.get("/livres");
         dispatch(setLivres(res.data.livres)); 
@@ -16,10 +14,11 @@ export default function useLivres() {
       } catch (err) {
         console.log("Error fetching livres", err.response?.data);
       }
-    };
-  useEffect(() => {
-    fetchLivres();
-  }, []);
+    },[dispatch]);
+      
+    useEffect(() => {
+      fetchLivres();
+    }, [fetchLivres]);
 
   return { livres , fetchLivres};
 }

@@ -32,7 +32,7 @@ export default function History(){
     // const idachaters = newachater.map(a => a.livre);
      useEffect(()=>{
         fetchShowlivres()
-    },[])
+    },[fetchShowlivres])
     useEffect(()=>{
         const fetchEmprunts = async () => {
             try {
@@ -47,10 +47,10 @@ export default function History(){
     },[])
     useEffect(()=>{
         fetchTelecharger()
-    },[])
+    },[fetchTelecharger])
     useEffect(()=>{
         fetchAchater()
-    },[])
+    },[fetchAchater])
     const livresUniques = [
     ...new Map(
         newachater
@@ -76,7 +76,7 @@ export default function History(){
     if (!showAchat && newnhostoy.length === 0) {
         setNewnhostoy([...idlireShowBooks]);
     }
-    },[idlireShowBooks])
+    },[idlireShowBooks,setNewnhostoy,newnhostoy,showAchat])
      return(
         <div className="cards-f">
             <div style={{marginTop:'50px',marginBottom:'50px'}} className='cards-h'>

@@ -1,7 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Show } from "./logSlice";
-import { setFavorite } from "./detailescardSlice";
-
 const profileSlice = createSlice({
    name:'profile',
    initialState:{

@@ -9,7 +9,6 @@ import Share from './pages/share'
 import {useSelector } from "react-redux";
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import Opinion from './pages/opinion';
- 
 import Profile from './pages/profile';
  import Favorites from './pages/favorites';
 import History from './pages/History';

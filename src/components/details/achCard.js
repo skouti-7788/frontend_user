@@ -83,16 +83,14 @@ const methods = [
   },
 ];
     const title  =  methods.find((m) =>  m.id === selected)?.title
-    // const navigate = useNavigate()
-   
+    
     const handleAcheter = async (title) => {
         if (!title) return;
 
         try {
             await acheterBook(bookId, title)
             setArretAchat(true)
-            // console.log(bookId, 'bookId', title, 'title')
-        } catch (err) {
+         } catch (err) {
             console.error('Achat échoué :', err)
         }
     }
@@ -100,24 +98,7 @@ const methods = [
     useEffect(() => {
         fetchAchater()
     }, [fetchAchater])
-
-    // const handleContinu = () => {
-    // if(user){
-    //  dispatch(setMessagePaye('La demande est incomplète'))
-    //  setArret(true)
-    //  setShowMethod(false);
-    //  setShowBuy(title==='Livre Physique'?true:false);
-    //  setShowPaye(title==='Livre PDF'?true:false);
-    //  handleAcheter(title);
-
-    // //  acheterBook(bookId,title)
-    //  setArretAchat(true)
-    // //  setTitleAch(title)
-    // }else{
-    //     dispatch(Show(true))
-    // }
-   
-    // }
+ 
     const handleContinu = () => {
     if (user) {
         setShowMethod(false);
@@ -128,27 +109,7 @@ const methods = [
         dispatch(Show(true))
     }
     }
-//     useEffect(() => {
  
-
-//     const newacheter = Array.isArray(achater)
-//     ? achater.find((achat) => achat.livre_id === bookId)
-//     : null;
-//     if (arret) {
-//         if (newacheter) {
-//             updateAcheter(newacheter.id, achet.messagePaye);
-//         } else {
-//             console.log("Aucun achat trouvé pour ce livre");
-//         }
-
-//         setArret(false);
-//     }
-
-//     if (arretAchat) {
-//         dispatch(setMessagePaye("Livraison du livre en attente"));
-//         setArretAchat(false);
-//     }
-// }, [arretAchat, arret, achater]);
     useEffect(() => {
         if (!arret || !Array.isArray(achater)) {
             return;
@@ -172,21 +133,9 @@ const methods = [
             dispatch(setMessagePaye("Livraison du livre en attente"));
             setArretAchat(false);
         }
-    }, [arretAchat, arret, achater, achet.messagePaye, bookId, dispatch, updateAcheter]);
-    // useEffect(()=>{
-    // const newacheter = achater?.find((achat) => achat.livre_id === bookId);
-
-    // if(arret){
-    // // console.log(achater,'newacheter' ,newacheter,newacheter.id)
-    // updateAcheter(newacheter.id,achet.messagePaye )
-    // setArret(false)
-    // }
-    // if(arretAchat){
-    //   dispatch(setMessagePaye('Livraison du livre en attente'))
-    //   setArretAchat(false)
-    // }
-    // },[arretAchat])
-    // if(showPaye){
+    }, [arretAchat, arret, achater, achet.messagePaye, bookId, dispatch,
+        updateAcheter,setArretAchat,title,setArret,]);
+  
     return (
         <div className='achcard'>
             {!showPaye&&<div>
@@ -203,14 +152,12 @@ const methods = [
                 </div>
 
                 <div className='btn-wrapper'>
-                    {/* <a href={download_link} target='_blank' rel='noopener noreferrer'> */}
-                        <button 
+                    <button 
                      className='btn-download' 
                      disabled={!is_free} 
                      onClick={handleTelech}
                      >Télécharger</button>
-                     {/* </a> */}
-                    <span className='btn-stat'>{stats.telecharger} téléchargements</span>
+                     <span className='btn-stat'>{stats.telecharger} téléchargements</span>
                 </div>
 
                 <div className='btn-wrapper'>
@@ -228,8 +175,7 @@ const methods = [
                     <span className='btn-stat' >{stats.acheter} achats</span>
                 </div>
             </div>
-            {/* <paymentPage/> */}
-            <Reader title={title} file_url={file_url}/>
+             <Reader title={title} file_url={file_url}/>
             {showDate && (
                 <div className="opinion-overlay" onClick={handleClose}>
                     <div
@@ -306,21 +252,7 @@ const methods = [
                     )}
                    </div>
                  
-                </div>  }
-            {/* {showPaye&&
-            //  <div className="opinion-overlay"  >
-            //         <div
-            //             className="opinion-modal"
-            //             // onClick={(e) => e.stopPropagation()}
-            //         >
-                    
-            //         </div>
-            
-            // </div>
-             
-            } */}
-           
-
+                </div>  } 
             {showBuy && (
                 <div className="opinion-overlay"  >
                     <div
@@ -375,5 +307,5 @@ const methods = [
        {showPaye &&<PaymentPage handleAcheter={handleAcheter} achatId={user.id} bookData={bookData} bookId={bookId}setShowPaye={setShowPaye} />}
         </div>
     )
-// }
+
 }

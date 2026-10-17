@@ -9,12 +9,12 @@ export  function useLog(){
     useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await api.get("users");
-        const mapped = res.data.map(b => ({
-          id: b.id,
-          username: b.username ?? "",
-          email: b.email ?? "",
-        }));
+        await api.get("users");
+        // const mapped = res.data.map(b => ({
+        //   id: b.id,
+        //   username: b.username ?? "",
+        //   email: b.email ?? "",
+        // }));
         // dispatch(setUsers(mapped)) ;
         
       } catch (err) {

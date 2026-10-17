@@ -10,7 +10,7 @@ export default function Favorites(){
     useEffect(() => {
         fetchFavorite();
         fetchLivres();
-    }, []);
+    }, [fetchFavorite,fetchLivres]);
     
     const ok = JSON.parse(localStorage.getItem('ok'))
     const iduser =  ok?JSON.parse(localStorage.getItem('user')).id:null

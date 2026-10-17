@@ -5,8 +5,6 @@ import { setClose } from "../redux/logSlice";
 import { useState } from "react";
 // import useLivres from "./database";
 export  function useHistory(){
-  //  const [isRate, setIsRate] = useState(0.0);
-    // const { fetchLivres } = useLivres();
     const dispatch = useDispatch();
     const detailescard = useSelector((state)=> state.detailescard)
     // const show = useSelector((state)=> state.loguser)
@@ -52,7 +50,7 @@ export  function useHistory(){
     const addHistory = async (title,rate,id) => {
       
       try{
-          const res = await axios.post("/history",{
+          await axios.post("/history",{
             nom: user.username||'',
             email: user.email|| '',
             livre: title || '',

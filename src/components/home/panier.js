@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { setShowProfile } from '../../app/redux/profileSlice'
 import api from '../../api/axios'
 import ProfileCard from '../profile/profileCard'
-import { useEffect } from 'react'
+import { useEffect,useCallback} from 'react'
 import KitabLogo from './KitabLogo';
 
 export default function Panier() {
@@ -17,43 +17,42 @@ export default function Panier() {
     const newuser = JSON.parse(localStorage.getItem('user')) || {} 
       
                      
-    const logout = async () => {
-        try{
-            const res = await api.put(`/adherents/by-user/${newuser.id}`,
-                {   
-                    user_id:newuser.id,
-                    nom:newuser.username,
-                    email:newuser.email,
-                    phone: '--', 
-                    datadahestion: new Date().toISOString().slice(0,10),  
-                    status:'inactive'
-                })
-            console.log(res.data)
-            }catch(err){
-                console.log(err)
-            }
+  const logout = useCallback(async () => {
         try {
-            const  res = await api.post("/logout")
-            
+            await api.put(`/adherents/by-user/${newuser.id}`, {
+                user_id: newuser.id,
+                nom: newuser.username,
+                email: newuser.email,
+                phone: '--',
+                datadahestion: new Date().toISOString().slice(0, 10),
+                status: 'inactive'
+            })
+        } catch (err) {
+            console.error('Erreur lors de la désactivation :', err)
+        }
+
+        try {
+            const res = await api.post('/logout')
+
             localStorage.removeItem('ok')
             localStorage.removeItem('token')
             localStorage.removeItem('user')
 
             dispatch(setOk(false))
             dispatch(setMessage(res.data.message))
-        
+
             navigate('/')
         } catch (err) {
-            console.log("Logout failed", err.response?.data)
+            console.error('Logout failed:', err.response?.data || err.message)
         }
-    }
+    }, [newuser.id, newuser.username, newuser.email, dispatch, navigate])
 
     useEffect(() => {
         if (ok.close) {
             logout()
             dispatch(setClose(null))
         }
-    }, [ok.close])
+    }, [ok.close,logout,dispatch])
 
     const getUserInitial = () => {
         try {

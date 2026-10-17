@@ -1,5 +1,5 @@
 import '../../css/detailescard.css'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch,useMemo, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import { setShowrate, clearIsShowLivre, clearIsRate, setShowOpinion,
        clearIsOpinion, setShowShare } from '../../app/redux/detailescardSlice'
@@ -31,7 +31,10 @@ export default function DetailesCard() {
     const profile = useSelector((state) => state.profile)
     const user = JSON.parse(localStorage.getItem('user')) || {}
     const { id } = useParams()
-    const oneCard = cards.livres.find((c) => c.id === Number(id)) || {}
+    const oneCard = useMemo(
+    () => cards.livres.find((c) => c.id === Number(id)) || {},
+    [cards.livres, id]
+    )
     const { checkFavorite, toggleFavorite, isFavorite } = useFavorite()
     const { addShowlivres } = useShowlivres()
     const [descriptions,setDescriptions] = useState([])
@@ -41,59 +44,76 @@ export default function DetailesCard() {
     useEffect(() => {
         if (user.id && id && profile.lire && ok.ok) {
             addShowlivres(user.id, id)
-            // dispatch(setLire(false))
         }
-    }, [user.id, id, profile.lire, ok.ok])
+    }, [user.id, id, profile.lire, ok.ok, addShowlivres])
 
     // 2. Checker le favori (MUSI ÊTRE DANS USEEFFECT)
     useEffect(() => {
         if (user.id && id && ok.ok) {
             checkFavorite(user.id, id)
         }
-    }, [user.id, id, ok.ok])
+    }, [user.id, id, ok.ok, checkFavorite])
 
     // 3. Réinitialiser après Rate/Show (MUSI ÊTRE DANS USEEFFECT)
     useEffect(() => {
-        if (detailescard.isRate || detailescard.isShowLivre) {
-            fetchLivres()
-            dispatch(clearIsRate())
-            dispatch(clearIsShowLivre())
-            setStar(true)
-            const timer = setTimeout(() => setStar(false), 2000)
-            return () => clearTimeout(timer)
+        if (!detailescard.isRate && !detailescard.isShowLivre) {
+            return
         }
-        
-    }, [detailescard.isRate, detailescard.isShowLivre])
-    useEffect(()=>{
-        if(detailescard.emprunter){
-           try{
-                const res = api.post('/emprunts',
-                    {
-                    livre:oneCard.title,
-                    livre_id:oneCard.id,
-                    user_id:  Number(user.id)?? 0,
-                    date_emprunt: new Date().toISOString().slice(0,10),
-                    date_retour_prevue: detailescard.emprunter ?? '', 
-                    }
-                )
-                // console.log(res.data)
-           }catch(err){
-                console.log(err)
-           }
-        }
-    },[detailescard])
+
+        fetchLivres()
+        dispatch(clearIsRate())
+        dispatch(clearIsShowLivre())
+
+        setStar(true)
+
+        const timer = setTimeout(() => {
+            setStar(false)
+        }, 2000)
+
+        return () => clearTimeout(timer)
+    }, [
+        detailescard.isRate,
+        detailescard.isShowLivre,
+        dispatch,
+        fetchLivres
+    ])
    
+    useEffect(() => {
+        if (!detailescard.emprunter || !oneCard.id || !user.id) {
+            return
+        }
+
+        const envoyerEmprunt = async () => {
+            try {
+                await api.post('/emprunts', {
+                    livre: oneCard.title,
+                    livre_id: oneCard.id,
+                    user_id: Number(user.id),
+                    date_emprunt: new Date().toISOString().slice(0, 10),
+                    date_retour_prevue: detailescard.emprunter
+                })
+            } catch (err) {
+                console.error('Erreur lors de l’emprunt :', err)
+            }
+        }
+
+        envoyerEmprunt()
+    }, [
+        detailescard.emprunter,
+        oneCard.id,
+        oneCard.title,
+        user.id
+    ])
     if(detailescard.isOpinion && ok.ok){
         addOpinion(id,oneCard.id,detailescard.isOpinion)
-    
-        // const opinions = detailescard.opinions.filter((o)=> o.livre_id === oneCard.id)
-        // setUserOpinon(opinions)
+     
         dispatch(clearIsOpinion())
     }
-    useEffect(()=>{
-    
-    fetchOpinion(oneCard.id); 
-    },[oneCard])
+    useEffect(() => {
+        if (oneCard.id) {
+            fetchOpinion(oneCard.id)
+        }
+    }, [oneCard.id, fetchOpinion])
     const opinions = detailescard.opinions.filter((o)=> o.livre_id === oneCard.id)
 
     //  console.log(oneCard.id,detailescard.isOpinion)

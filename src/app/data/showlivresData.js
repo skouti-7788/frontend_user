@@ -33,10 +33,10 @@ export  function useShowlivres(){
     const addShowlivres = async (user,id) => { 
         try{
         // console.log("Adding to Showlivres:", { user,  id });
-        const res = await axios.post("/showlivres", {
-            user_id: user,
-            livre_id: Number(id)
-            });
+            await axios.post("/showlivres", {
+                user_id: user,
+                livre_id: Number(id)
+                });
             await checkShowlivres(user, id);
             
         }catch(err){
