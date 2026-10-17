@@ -33,8 +33,7 @@ export default function History(){
     return {...a,livre};});
     
     // const idachaters = newachater.map(a => a.livre);
-    
-    useEffect(()=>{
+     useEffect(()=>{
         fetchShowlivres()
     },[])
     useEffect(()=>{
@@ -55,13 +54,24 @@ export default function History(){
     useEffect(()=>{
         fetchAchater()
     },[])
-    
+    const livresUniques = [
+    ...new Map(
+        newachater
+        .filter(item =>
+                item.user_id === iduser 
+                &&
+                ["La demande est complète","La demande est incomplète"]
+                .includes(item.status_paye)
+            )
+        .map(item => [item.livre_id, item]) 
+    ).values()
+    ];
     const [newnhostoy,setNewnhostoy] = useState([])
     const [activeTab,setActiveTab] = useState('lectures')
     const  history = [
         { label:  'Mes lectures', key: 'lectures', action: () => {setNewnhostoy([...idlireShowBooks]);setShowAchet(false); setActiveTab('lectures')} },
         { label:  'Mes téléchargements', key: 'telechargements', action: () => {setNewnhostoy([...idtelechargements]);setShowAchet(false); setActiveTab('telechargements')} },
-        { label:  'Mes achats', key: 'achats', action: () =>{ setNewnhostoy([...newachater]);setShowAchet(true); setActiveTab('achats')} },
+        { label:  'Mes achats', key: 'achats', action: () =>{ setNewnhostoy([...livresUniques]);setShowAchet(true); setActiveTab('achats')} },
         { label:  'Mes emprunts', key: 'emprunts', action: () =>  {setNewnhostoy([...idnewemprunt]);setShowAchet(false); setActiveTab('emprunts')} },
 
     ]
@@ -85,11 +95,14 @@ export default function History(){
                 {newnhostoy.length > 0 ?
                 <div className='cards'>
                     {newnhostoy.map((b)=> {
+                        const repeatedCount = newachater.filter(item => item.user_id === iduser && item.livre_id === b.livre_id &&
+                            item.status_paye === 'La demande est complète'&& item.status === b.status).length;
 
                         return( <div className={showAchat?'cards-achat':''}>
-                         <BookCard  key={b.id} book={b.livre || b}/>
+                    <BookCard  key={b.id}   book={b.livre || b}/>
                           {showAchat && (
                             <div>
+                            <p>{repeatedCount}</p>
                             <h3>{b.status}</h3>
                             <p>{b.status_paye}</p>
                             </div>

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setMessagePaye } from '../../app/redux/detailescardSlice';
 import useAcheter from '../../app/data/acheterData';
 import MessagePaye from '../details/MessagePaye';
-export default  function PaymentPage({bookData,achatId,handleAcheter,setShowPaye}) {
+export default  function PaymentPage({bookData,achatId,handleAcheter,bookId,setShowPaye}) {
     const dispatch = useDispatch()
     const {success,message,handlePayment} = useAcheter();
     const [formData, setFormData] = useState({
@@ -49,10 +49,10 @@ export default  function PaymentPage({bookData,achatId,handleAcheter,setShowPaye
         }
 
         try {
-            await handlePayment(achatId, formData);
+            await handlePayment(achatId, bookId,formData);
             dispatch(setMessagePaye('Paiement accepté'));
-            handleAcheter();
-            setShowPaye(false);
+            // handleAcheter(book.title);
+            // setShowPaye(false);
         } catch (err) {
             const responseErrors = err.response?.data?.errors;
             if (responseErrors) {
@@ -72,7 +72,8 @@ export default  function PaymentPage({bookData,achatId,handleAcheter,setShowPaye
         price: 49.00,
         currency: "DH"
     };
-    // console.log(book)
+    // const bookPrice = book.prix ?? book.price ?? 0;
+    // console.log(success)
     return (
    
        

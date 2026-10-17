@@ -1,6 +1,6 @@
 import '../../css/achCard.css'
 import '../../css/opinion.css'
-import { setEmprunter, setMessagePaye,setAcheter } from '../../app/redux/detailescardSlice'
+import { setEmprunter, setMessagePaye } from '../../app/redux/detailescardSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { Show } from '../../app/redux/logSlice'
 import useBook from '../../app/data/bookData'
@@ -8,10 +8,9 @@ import { setLire } from '../../app/redux/profileSlice'
 import { useEffect, useState } from 'react'
 import Reader from './lireLivre';
 import PaymentPage from './paymentPage'
-import { useNavigate } from 'react-router'
 import useTelecharger from '../../app/data/telechargerData'
 import useAcheter from '../../app/data/acheterData'
-import paymentPage from './paymentPage'
+// import paymentPage from './paymentPage'
 
 export default function AchCard({is_free,book,bookId, 
     stats = { lire: 0, telecharger: 0, emprunter: 0, acheter: 0 },showPaye,bookData,
@@ -20,10 +19,10 @@ export default function AchCard({is_free,book,bookId,
 
     useBook()
     const {telechargerBook} = useTelecharger()
-    const { achater,success,fetchAchater,acheterBook,updateAcheter } = useAcheter()   
+    const { achater, fetchAchater, acheterBook, updateAcheter } = useAcheter()   
     const ok = useSelector((state) => state.loguser.ok)
     const dispatch = useDispatch()
-
+    // console.log('achater',achater)
     const [showDate, setShowDate] = useState(false)
     const [dateRetour, setDateRetour] = useState("")
     const [showBuy, setShowBuy] = useState(false)
@@ -36,7 +35,7 @@ export default function AchCard({is_free,book,bookId,
     const [arret,setArret] = useState(false)
     const [arretAchat,setArretAchat] = useState(false)
     const achet = useSelector((state)=> state.detailescard)
-    const [titleAch,setTitleAch] = useState('')
+    // const [titleAch,setTitleAch] = useState('')
     // ✅ close modal
     const handleClose = () => {
         setShowDate(false)
@@ -55,19 +54,9 @@ export default function AchCard({is_free,book,bookId,
         } 
     }
     const handleAchat = () => {
-    const data = {
-        adresse,
-        ville,
-        telephone
+        // Ici on pourrait envoyer l'adresse au backend pour la livraison
+        setShowBuy(false)
     }
-
-    // console.log("Achat:", data)
-
-    // هنا تقدر تربط مع Laravel API
-    // axios.post('/achat', data)
-
-    setShowBuy(false)
-   }
     const handleTelech = () =>{
     telechargerBook(bookId)
     }
@@ -95,50 +84,95 @@ const methods = [
 ];
     const title  =  methods.find((m) =>  m.id === selected)?.title
     // const navigate = useNavigate()
-    useEffect(() => {
-          // const handleAcheter = () => {
-        if(success){
-        acheterBook(bookId,titleAch)
-        setArretAchat(true)
-        console.log(bookId,'bookId',title,'title')
-        }
-    // }
-        fetchAchater()
-    },[])                   
-    const handleContinu = () => {
-    if(user){
-     dispatch(setMessagePaye('La demande est incomplète'))
-     setArret(true)
-     setShowMethod(false);
-     setShowBuy(title==='Livre Physique'?true:false);
-     setShowPaye(title==='Livre PDF'?true:false);
-    //  handleAcheter(title);
-      setTitleAch(title)
-     }else{
-        dispatch(Show(true))
-     }
    
-    }
-    useEffect(() => {
-    const newacheter = achater?.find(
-        (achat) => achat.livre_id === bookId
-    );
+    const handleAcheter = async (title) => {
+        if (!title) return;
 
-    if (arret) {
-        if (newacheter) {
-            updateAcheter(newacheter.id, achet.messagePaye);
-        } else {
-            console.log("Aucun achat trouvé pour ce livre");
+        try {
+            await acheterBook(bookId, title)
+            setArretAchat(true)
+            // console.log(bookId, 'bookId', title, 'title')
+        } catch (err) {
+            console.error('Achat échoué :', err)
         }
+    }
+    
+    useEffect(() => {
+        fetchAchater()
+    }, [fetchAchater])
+
+    // const handleContinu = () => {
+    // if(user){
+    //  dispatch(setMessagePaye('La demande est incomplète'))
+    //  setArret(true)
+    //  setShowMethod(false);
+    //  setShowBuy(title==='Livre Physique'?true:false);
+    //  setShowPaye(title==='Livre PDF'?true:false);
+    //  handleAcheter(title);
+
+    // //  acheterBook(bookId,title)
+    //  setArretAchat(true)
+    // //  setTitleAch(title)
+    // }else{
+    //     dispatch(Show(true))
+    // }
+   
+    // }
+    const handleContinu = () => {
+    if (user) {
+        setShowMethod(false);
+        setShowBuy(title === 'Livre Physique' ? true : false);
+        setShowPaye(title === 'Livre PDF' ? true : false);
+        handleAcheter(title);
+    } else {
+        dispatch(Show(true))
+    }
+    }
+//     useEffect(() => {
+ 
+
+//     const newacheter = Array.isArray(achater)
+//     ? achater.find((achat) => achat.livre_id === bookId)
+//     : null;
+//     if (arret) {
+//         if (newacheter) {
+//             updateAcheter(newacheter.id, achet.messagePaye);
+//         } else {
+//             console.log("Aucun achat trouvé pour ce livre");
+//         }
+
+//         setArret(false);
+//     }
+
+//     if (arretAchat) {
+//         dispatch(setMessagePaye("Livraison du livre en attente"));
+//         setArretAchat(false);
+//     }
+// }, [arretAchat, arret, achater]);
+    useEffect(() => {
+        if (!arret || !Array.isArray(achater)) {
+            return;
+        }
+
+        const newacheter = achater.find(
+            (achat) => Number(achat.livre_id) === Number(bookId)  &&
+               achat.status === title
+        );
+
+        if (!newacheter) {
+            console.log("Aucun achat trouvé pour ce livre");
+            setArret(false);
+            return;
+        }
+        
+        updateAcheter(newacheter.id, achet.messagePaye);
 
         setArret(false);
-    }
-
-    if (arretAchat) {
-        dispatch(setMessagePaye("Livraison du livre en attente"));
-        setArretAchat(false);
-    }
-}, [arretAchat, arret, achater]);
+        if (arretAchat) {
+            dispatch(setMessagePaye("Livraison du livre en attente"));
+            setArretAchat(false);
+        }
+    }, [arretAchat, arret, achater, achet.messagePaye, bookId, dispatch, updateAcheter]);
     // useEffect(()=>{
     // const newacheter = achater?.find((achat) => achat.livre_id === bookId);
 
@@ -338,7 +372,7 @@ const methods = [
                     </div>
                 </div>
             )}</div>}
-       {showPaye &&<PaymentPage achatId={user.id} bookData={bookData} setShowPaye={setShowPaye} />}
+       {showPaye &&<PaymentPage handleAcheter={handleAcheter} achatId={user.id} bookData={bookData} bookId={bookId}setShowPaye={setShowPaye} />}
         </div>
     )
 // }
