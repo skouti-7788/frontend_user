@@ -2,26 +2,44 @@ import axios from "../../api/axios";
 import { useEffect,useCallback} from "react";
 import { useDispatch ,useSelector} from "react-redux";
 import { setLivres } from "../redux/cardsSlice";
+
 export default function useLivres() {
   const livres = useSelector((state) => state.cards.livres);
   const dispatch = useDispatch();
-   
-    const fetchLivres = useCallback( async () => {
-      try {
-        const res = await axios.get("/livres");
-        dispatch(setLivres(res.data.livres)); 
-        console.log("Livres fetched successfully", res.data.livres);
-      } catch (err) {
-        console.log("Error fetching livres", err.response?.data);
-      }
-    },[dispatch]);
-      
-    useEffect(() => {
-      fetchLivres();
-    }, [fetchLivres]);
 
-  return { livres , fetchLivres};
+  const fetchLivres = useCallback(async () => {
+    try {
+      const res = await axios.get("/livres");
+
+      console.log("Réponse complète API :", res.data);
+
+      const livresData = Array.isArray(res.data)
+        ? res.data
+        : Array.isArray(res.data?.livres)
+          ? res.data.livres
+          : Array.isArray(res.data?.data)
+            ? res.data.data
+            : [];
+
+      dispatch(setLivres(livresData));
+
+      console.log("Livres récupérés :", livresData);
+    } catch (err) {
+      console.error(
+        "Erreur récupération livres :",
+        err.response?.status,
+        err.response?.data || err.message
+      );
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchLivres();
+  }, [fetchLivres]);
+
+  return { livres, fetchLivres };
 }
+
 
 
  
