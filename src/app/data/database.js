@@ -3,16 +3,16 @@ import { useEffect,useCallback} from "react";
 import { useDispatch ,useSelector} from "react-redux";
 import { setLivres } from "../redux/cardsSlice";
 
+ 
 export default function useLivres() {
   const livres = useSelector((state) => state.cards.livres);
   const dispatch = useDispatch();
 
   const fetchLivres = useCallback(async () => {
+ 
     try {
-      const res = await axios.get("/livres");
-
-      console.log("Réponse complète API :", res.data);
-
+ 
+      const res = await axios.get("/livres"); 
       const livresData = Array.isArray(res.data)
         ? res.data
         : Array.isArray(res.data?.livres)
@@ -21,25 +21,21 @@ export default function useLivres() {
             ? res.data.data
             : [];
 
+ 
       dispatch(setLivres(livresData));
-
-      console.log("Livres récupérés :", livresData);
     } catch (err) {
-      console.error(
-        "Erreur récupération livres :",
-        err.response?.status,
-        err.response?.data || err.message
-      );
+      console.error("Erreur API:", err.message);
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
     }
   }, [dispatch]);
 
   useEffect(() => {
-    fetchLivres();
+     fetchLivres();
   }, [fetchLivres]);
 
   return { livres, fetchLivres };
 }
-
 
 
  

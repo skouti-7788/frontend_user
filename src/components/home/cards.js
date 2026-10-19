@@ -2,16 +2,18 @@ import '../../css/cards.css'
 import { useSelector, useDispatch } from 'react-redux'
 import BookCard from './bookcard'
 import { setNextNew, setBackNew, setBackShow, setNextShow } from '../../app/redux/cardsSlice'
-
+import useLivres from '../../app/data/database'
+ 
 export default function Cards() {
     const cards = useSelector((state) => state.cards)
     const dispatch = useDispatch()
-
+    useLivres()  
     const books = [...cards.cards]
+     
+
     const newBooks = books
         .sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate))
         .slice(cards.new, cards.new + 10)
-
     const ShowBooks = books
         .sort((a, b) => a.showLiver - b.showLiver)
         .slice(cards.show, cards.show + 10)
